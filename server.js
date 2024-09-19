@@ -7,8 +7,6 @@ const path = require('path');
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-
 if(process.env.NODE_ENV === 'local') {
     app.use(cors({
         origin: 'http://localhost:3000',
@@ -19,7 +17,6 @@ if(process.env.NODE_ENV === 'local') {
         credentials: true,
     }));
 }
-
 
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, './frontend/dist')));
@@ -43,6 +40,5 @@ const dbConnect = async () => {
 }
 
 dbConnect()
-
-// app.get('/', (req, res) => res.send("Hello, world!"));
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
