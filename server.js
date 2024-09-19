@@ -2,12 +2,12 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const path = require('path');
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 if(process.env.NODE_ENV === 'local') {
     app.use(cors({
