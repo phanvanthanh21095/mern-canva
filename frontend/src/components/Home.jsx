@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import Carousel from 'react-multi-carousel';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaTrash } from 'react-icons/fa';
 import 'react-multi-carousel/lib/styles.css';
 
 
 const Home = () => {
+    const navigate = useNavigate();
+    const [state, setState] = useState({
+        with: 0,
+        height: 0
+    });
+    const inputHandle = (e) => {
+        setState({
+            ...state,
+            [e.target.name]: e.target.value
+        });
+    }
     const [show, setShow] = useState(false);
     const responsive = {
         superLargeDesktop: {
@@ -26,6 +37,16 @@ const Home = () => {
         }
     };
 
+    const create = ()=> {
+        navigate('design/create', {
+            state: {
+                type: 'create',
+                width: state.width,
+                height: state.height
+            }
+        });
+    }
+
     return (
         <div className='pt-5'>
             <div className='w-full flex justify-center items-center h-[250px] bg-gradient-to-r from-[#4c76cf] to-[#552ab8] relative rounded-md overflow-hidden'>
@@ -36,14 +57,14 @@ const Home = () => {
                     <div className='grid grid-cols-2 pb-4 gap-3'>
                         <div className='flex gap-2 justify-center items-start flex-col'>
                             <label htmlFor="width">Width</label>
-                            <input type="number" name='width' id='width' className='w-full px-2 outline-none py-[4px] bg-[#1b1a1a] border border-[#404040] rounded-md' />
+                            <input onChange={ inputHandle } type="number" name='width' id='width' className='w-full px-2 outline-none py-[4px] bg-[#1b1a1a] border border-[#404040] rounded-md' />
                         </div>
                         <div className='flex gap-2 justify-center items-start flex-col'>
                             <label htmlFor="height">Height</label>
-                            <input type="number" name='height' id='height' className='w-full px-2 outline-none py-[4px] bg-[#1b1a1a] border border-[#404040] rounded-md' />
+                            <input onChange={ inputHandle } type="number" name='height' id='height' className='w-full px-2 outline-none py-[4px] bg-[#1b1a1a] border border-[#404040] rounded-md' />
                         </div>
                     </div>
-                    <button className='p-2 text-[13px] overflow-hidden text-center bg-[#8b3dffad] text-white rounded-[3px] font-medium hover:bg-[#8b3dffd3] w-full'>Create new design</button>
+                    <button onClick={ create } className='p-2 text-[13px] overflow-hidden text-center bg-[#8b3dffad] text-white rounded-[3px] font-medium hover:bg-[#8b3dffd3] w-full'>Create new design</button>
                 </div>
                 <div>
                     <h2 className='text-3xl pb-10 pt-6 font-semibold text-white'>What will you design today?</h2>
@@ -52,7 +73,7 @@ const Home = () => {
             <div>
                 <h2 className='text-xl py-6 font-semibold text-white'>Your recent designs</h2>
                 <div>
-                    <Carousel 
+                    <Carousel
                         autoPlay={true}
                         infinite={true}
                         responsive={responsive}

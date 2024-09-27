@@ -7,9 +7,11 @@ import {
 
 import Index from "./pages/Index";
 import Layout from "./pages/Layout";
+import Main from "./pages/Main";
 import Home from "./components/Home";
 import Projects from "./components/Projects";
 import Templates from "./components/Templates";
+import CreateDesign from "./components/CreateDesign";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       },
     ]
   },
+  {
+    path: "/design/create",
+    element: <CreateDesign />
+  },
+  {
+    path: "/design/:id/edit",
+    element: <Main />
+  }
 ]);
 
 function App() {
