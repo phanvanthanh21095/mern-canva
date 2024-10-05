@@ -27,7 +27,7 @@ const CreateComponent = ({ info, current_component, removeComponent }) => {
       transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)',
     }}>
       {
-        current_component.id === info.id && <div onClick={()=> removeComponent(info.id)} className='px-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'>
+        current_component.id === info.id && <div onClick={()=> removeComponent(info.id)} className='p-2 bg-white absolute top-0 right-0 hidden group-hover:block cursor-pointer rounded-md'>
           <BsTrash />
         </div>
       }
