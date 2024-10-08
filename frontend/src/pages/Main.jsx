@@ -16,7 +16,11 @@ const Main = () => {
     const [current_component, setCurrentComponent] = useState('');
     const [color, setColor] = useState('');
     const [image, setImage] = useState('');
-    const [rotate, setRotate] = useState('');
+    const [rotate, setRotate] = useState(0);
+    const [left, setLeft] = useState('');
+    const [top, setTop] = useState('');
+    const [width, setWidth] = useState('');
+    const [height, setHeight] = useState('');
 
     const [show, setShow] = useState({
         status: true,
@@ -31,12 +35,57 @@ const Main = () => {
         });
     }
 
-    const moveElement = () => {
-        console.log('moveElement')
+    const moveElement = (id, currentInfo) => {
+        setCurrentComponent(currentInfo);
+        let isMoving = true;
+        const currentDiv = document.getElementById(id);
+
+        const mouseMove = ({ movementX, movementY }) => {
+            const getStyle = window.getComputedStyle(currentDiv);
+            const left = parseInt(getStyle.left);
+            const top = parseInt(getStyle.top);
+            if (isMoving) {
+                currentDiv.style.left = `${left + movementX}px`;
+                currentDiv.style.top = `${top + movementY}px`;
+            }
+        }
+
+        const mouseUp = () => {
+            isMoving = false;
+            window.addEventListener('mousemove', mouseMove);
+            window.addEventListener('mouseup', mouseUp);
+            setLeft(parent(currentDiv.style.left));
+            setTop(parent(currentDiv.style.top));
+        }
+        window.addEventListener('mousemove', mouseMove);
+        window.addEventListener('mouseup', mouseUp);
     }
 
-    const resizeElement = () => {
-        console.log('resizeElement')
+    const resizeElement = (id, currentInfo) => {
+        setCurrentComponent(currentInfo);
+        let isMoving = true;
+        const currentDiv = document.getElementById(id);
+
+        const mouseMove = ({ movementX, movementY }) => {
+            const getStyle = window.getComputedStyle(currentDiv);
+            const width = parseInt(getStyle.width);
+            const height = parseInt(getStyle.height);
+            if (isMoving) {
+                currentDiv.style.width = `${width + movementX}px`;
+                currentDiv.style.height = `${height + movementY}px`;
+            }
+        }
+
+        const mouseUp = () => {
+            isMoving = false;
+            window.addEventListener('mousemove', mouseMove);
+            window.addEventListener('mouseup', mouseUp);
+            setWidth(parent(currentDiv.style.width));
+            setHeight(parent(currentDiv.style.height));
+        }
+
+        window.addEventListener('mousemove', mouseMove);
+        window.addEventListener('mouseup', mouseUp);
     }
 
     const rotateElement = () => {
@@ -51,7 +100,7 @@ const Main = () => {
             left: 10,
             top: 10,
             opacity: 1,
-            width: 200,
+            width: 150,
             height: 150,
             rotate,
             z_index: 2,
@@ -98,14 +147,28 @@ const Main = () => {
             const index = components.findIndex(c => c.id === current_component.id);
             const temp = components.filter(c => c.id !== current_component.id);
 
+            if (current_component.name !== 'text') {
+                components[index].width = width || current_component.width;
+                components[index].height = height || current_component.height;
+            }
+
             if (current_component.name === 'main_frame' && image) {
                 components[index].image = image || current_component.image;
             }
+
             components[index].color = color || current_component.color;
 
+            if (current_component.name !== 'main_frame') {
+                components[index].left = left || current_component.left;
+                components[index].top = top || current_component.top;
+            }
             setComponents([...temp, components[index]]);
+            setWidth('');
+            setHeight('');
+            setTop('');
+            setLeft('');
         }
-    }, [color, image]);
+    }, [color, image , left, top, width, height]);
 
     return (
         <div className='min-w-full h-screen bg-black'>
@@ -192,7 +255,7 @@ const Main = () => {
                                 <div className='grid grid-cols-2 gap-2'>
                                     {
                                         [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27].map((img, i) => <div key={i} onClick={() => setImage('https://files.fullstack.edu.vn/f8-prod/courses/7.png')} className='w-full h-[90px] rounded-md overflow-hidden cursor-pointer'>
-                                            <img className='w-full h-full object-fill' src="https://files.fullstack.edu.vn/f8-prod/courses/7.png" alt="" />
+                                            <img className='w-full h-full object-fill' src="https://files.fullstack.edu.vn/f8-prod/courses/7.png" alt="image" />
                                         </div>)
                                     }
                                 </div>
@@ -219,7 +282,7 @@ const Main = () => {
                                         <input type="color" onChange={(e) => setColor(e.target.value)} className='invisible' id='color' />
                                     </div>
                                     {
-                                        (current_component.name !== 'main_frame' && image) && <div>
+                                        (current_component.name === 'main_frame' && image) && <div>
                                             <button className='p-[6px] bg-slate-700 text-white rounded-sm' onClick={remove_background}>Remove Background</button>
                                         </div>
                                     }
